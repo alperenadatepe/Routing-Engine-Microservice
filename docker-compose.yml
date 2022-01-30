@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  routing_service:
+    build: ./routing-service
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./routing-service/:/app/
+    ports:
+      - 8001:8000
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx_config.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - routing_service
